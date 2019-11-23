@@ -1,41 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
   const [initArray, setInitArray] = useState("")
   const [reOrderedArray, setReOrderedArray] = useState("")
 
-  function recursive(arr, index, odd, even) {
-    if (index >= arr.length) {
-      let recursived = [...odd.concat(even)]
-      setReOrderedArray(recursived.toString())
-      return
+  function recursive(arr, i, temp) {
+    if (arr.length % 2 == 0)
+      temp = arr.length / 2;
+    else
+      temp = (arr.length / 2) - 1;
+    if (i >= temp) {
+      setReOrderedArray(arr);
     }
     else {
-      if (arr[index] % 2 !== 0) {
-        odd.push(arr[index])
-      }
-      else if (arr[index] % 2 === 0) {
-        even.push(arr[index])
-      }
+      i++;
+      arr.push(arr[i]);
+      arr.splice(i, 1);
+      recursive(arr, i, temp);
     }
-    index++
-    recursive(arr, index, odd, even)
   }
   function onSubmit(arr) {
     let newArr = arr.split(",")
-    let odd = []
-    let even = []
-    recursive(newArr, 0, odd, even)
+    recursive(newArr, 0, 0)
   }
-
   return (
     <div className="App">
       <h1>Recursive</h1>
       <div>
         <form>
-          <label>Input (number only)</label>
+          <label>Input (number only, seperated by comma)</label>
           <br />
           <textarea value={initArray}
             onChange={(e) => {
@@ -47,6 +41,7 @@ function App() {
           }}></input>
         </form>
       </div>
+      <br />
       <div>
         <textarea disabled
           value={reOrderedArray}>
